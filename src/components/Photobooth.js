@@ -50,6 +50,14 @@ const Photobooth = () => {
       setCameraPermission('denied');
     }
   }
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+  };
   
   // Takes Picture
   const capturePhoto = () => {
@@ -111,6 +119,7 @@ const Photobooth = () => {
         try {
           setPhotos([...newCapturedPhotos]);
           setTimeout(()=> {
+            stopCamera();
             router.push("/photostrip");
           }, 300);
         } catch (error) {

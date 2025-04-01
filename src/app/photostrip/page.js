@@ -2,7 +2,7 @@ import PhotoStrip from "@/components/PhotoStrip";
 
 const Preview = () => {
   return (
-    <div>
+    <div className="container">
       <h1>Customize your Photo Strip</h1>
 
       <PhotoStrip />
