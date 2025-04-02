@@ -367,7 +367,7 @@ const PhotoStrip = () => {
         </Link>
 
         {photos.length === 4 && (
-           <button onClick={handleDownload} className={styles.downloadButton}>
+           <button onClick={handleDownload} className={styles.downloadButton} disabled={isLoadingAssets}>
              Download
            </button>
         )}
