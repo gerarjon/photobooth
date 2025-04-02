@@ -6,8 +6,11 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from './Photobooth.module.css';
 
+// Images & Overlays
+import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
+
 // Helper function to draw a star
-function drawStar(ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') {
+const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
   ctx.beginPath();
   let rot = Math.PI / 2 * 3;
@@ -31,7 +34,7 @@ function drawStar(ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') {
 }
 
 // Helper function to draw a heart
-function drawHeart(ctx, x, y, width, height, color = 'red') {
+const drawHeart = (ctx, x, y, width, height, color = 'red') => {
     ctx.fillStyle = color;
     ctx.beginPath();
     const topCurveHeight = height * 0.3;
@@ -69,16 +72,61 @@ const PhotoStrip = () => {
   const canvasRef = useRef(null);
   const [backgroundColor, setBackgroundColor] = useState("white");
   const [frameTheme, setFrameTheme] = useState("none");
+  const [loadedAssets, setLoadedAssets] = useState({});
+  const [isLoadingAssets, setIsLoadingAssets] = useState(true);
+
+  // --- Map theme names/IDs to imported asset URLs ---
+  const assetMap = useRef({ 
+    pikachu_frame: pikachuOverlayUrl,
+  }).current;
+
+  // --- Effect to preload image assets on mount ---
+  useEffect(() => {
+    setIsLoadingAssets(true);
+    const images = {};
+    let loadedCount = 0;
+    const totalImages = Object.keys(assetMap).length;
+
+    if (totalImages === 0) {
+        setIsLoadingAssets(false);
+        return;
+    }
+
+    Object.entries(assetMap).forEach(([key, src]) => {
+      const img = new Image();
+      img.onload = () => {
+        images[key] = img;
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          setLoadedAssets(images);
+          setIsLoadingAssets(false);
+          console.log("All custom assets loaded.");
+        }
+      };
+      img.onerror = () => {
+        console.error(`Failed to load asset: ${key} from ${src}`);
+        loadedCount++;
+         if (loadedCount === totalImages) {
+          setLoadedAssets(images);
+          setIsLoadingAssets(false);
+        }
+      };
+      img.src = src.src;
+    });
+
+    // Optional: Cleanup function if needed
+    // return () => { /* ... */ }
+
+  }, [assetMap]); 
 
   const drawFrameOverlay = useCallback((context, canvas, theme) => {
     const width = canvas.width;
     const height = canvas.height;
+    context.lineWidth = 1;
     const imgWidth = 400;
     const imgHeight = 300;
     const borderSize = 40;
     const photoSpacing = 20;
-
-    context.lineWidth = 1;
 
     switch (theme) {
       case 'hearts':
@@ -123,15 +171,35 @@ const PhotoStrip = () => {
         //   }
         //   break;
 
+      case 'pikachu_frame':
+        const pikachuFrameImg = loadedAssets.pikachu_frame;
+          if (pikachuFrameImg) {
+            context.drawImage(pikachuFrameImg, 0, 0, width, height);
+        } else if (!isLoadingAssets) {
+            console.warn("Party frame asset not loaded");
+        }
+        break;
+
       case 'none':
       default:
         break;
     }
-  }, []);
+  }, [loadedAssets, isLoadingAssets]);
 
   const generatePhotostrip = useCallback(() => {
     const canvas  = canvasRef.current;
-    if (!canvas || photos.length !== 4) return;
+
+    if (!canvas || photos.length < 4 || isLoadingAssets) {
+      if (canvas) {
+        const context = canvas.getContext("2d");
+        context.fillStyle = 'lightgray';
+        context.fillRect(0,0, canvas.width, canvas.height);
+        context.fillStyle = 'black';
+        context.fillText("Loading Assets...", 50, 50);
+      }
+      return;
+    }
+
     const context = canvas.getContext("2d");
 
     const imgWidth = 400;
@@ -205,19 +273,33 @@ const PhotoStrip = () => {
         imagesLoaded++; // Still count it to avoid waiting forever
       };
     });
-  }, [photos, backgroundColor, frameTheme, drawFrameOverlay]);
+  }, [photos, backgroundColor, frameTheme, isLoadingAssets, drawFrameOverlay]);
 
-  useEffect(()=> {
-    if (photos && photos.length === 4) {
+  useEffect(() => {
+    // Generate only if photos are ready AND assets are loaded
+    if (photos && photos.length === 4 && !isLoadingAssets) {
       generatePhotostrip();
     }
-  }, [photos, generatePhotostrip]);
+     // Show loading state on canvas if photos ready but assets aren't
+    else if (photos && photos.length === 4 && isLoadingAssets && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      canvas.width = 480;
+      canvas.height = 1400;
+      context.fillStyle = 'lightgray';
+      context.fillRect(0,0, canvas.width, canvas.height);
+      context.fillStyle = 'black';
+      context.font = "20px sans-serif";
+      context.textAlign = "center";
+      context.fillText("Loading assets...", canvas.width / 2, canvas.height / 2);
+    }
+  }, [photos, generatePhotostrip, isLoadingAssets]);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Get the data URL (defaults to PNG)
+    // Get the data URL (defaults to PNG)Í
     const image = canvas.toDataURL("image/png");
 
     // Create a temporary link element
@@ -262,6 +344,7 @@ const PhotoStrip = () => {
               <p>Customize Frame/Stickers:</p>
 
               <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
+              <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
               <button onClick={() => setFrameTheme('hearts')} className={styles.frameButton}>Hearts</button>
               <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               <button onClick={() => setFrameTheme('vintage')} className={styles.frameButton}>Vintage Border</button>
