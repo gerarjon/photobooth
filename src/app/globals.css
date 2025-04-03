@@ -4,6 +4,10 @@
   margin: 0;
 }
 
+html {
+  background-color: #fff;
+}
+
 .container {
   min-height: 100vh;
   padding: 0 0.5rem;
@@ -22,4 +26,52 @@
   align-items: center;
   width: 100%;
   max-width: 800px;
+}
+
+h2 {
+  margin-bottom: 0.5em;
+}
+
+.title {
+  text-transform: uppercase;
+}
+
+.white {
+  background-color: white;
+}
+
+.black {
+  background-color: black;
+}
+
+.gray {
+  background-color: #f0f0f0;
+}
+
+.red {
+  background-color: #f53843;
+}
+
+.orange {
+  background-color: #f7bb3f;
+}
+
+.yellow {
+  background-color: #fdea58;
+}
+
+.green {
+  background-color: #4bee4d;
+}
+
+.blue {
+  background-color: #7cd3ff;
+}
+
+.purple {
+  background-color: #c631f7;
+}
+
+.pink {
+  background-color: #fed8ff;
 }

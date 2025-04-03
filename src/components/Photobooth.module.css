@@ -110,7 +110,7 @@
 .photoPreviewContainer {
   width: 425px;
   height: 90px;
-  box-shadow: 0px 3px 10px rgba(20, 227, 44, 0.499);
+  box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
   padding: 5px;
 }
 
@@ -126,6 +126,7 @@
 }
 
 .photoStripContainer {
+  grid-area: photoStripContainer;
   display: flex;
   justify-content:center;
   margin: 2em 0;
@@ -138,10 +139,54 @@
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
 }
 
+.photoStripMainContainer {
+  display: grid;
+  grid-template-columns: auto minmax(100px, 300px);
+  grid-gap: 1rem;
+  grid-template-areas:
+    "photoStripContainer customizeButtonsContainer";
+}
+
+.customizeButtonsContainer {
+  grid-area: customizeButtonsContainer;
+  margin: 2em 0;
+}
+
+.customizeStylesContainer {
+  padding: 1em 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .controlButtonsContainer {
   margin: 2em 0;
   display: flex;
   justify-content: center;
+}
+
+.customizePhotoStripH2 {
+  display: flex;
+  justify-content: center;
+}
+
+.colorButton {
+  border: 2px solid transparent;
+  box-shadow: 0 1px 5px 1px rgba(126, 115, 115, 0.25);
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.colorButton:hover {
+  transform: scale(1.1);
+}
+
+.colorButton:active {
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.5);
 }
 
 @media (max-width: 600px) {

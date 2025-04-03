@@ -3,9 +3,11 @@ import PhotoStrip from "@/components/PhotoStrip";
 const Preview = () => {
   return (
     <div className="container">
-      <h1>Customize your Photo Strip</h1>
+      <main className="main">
+        <h1>Customize Your PhotoStrip</h1>
 
-      <PhotoStrip />
+        <PhotoStrip />
+      </main>
     </div>
   )
 }

@@ -9,7 +9,6 @@ import styles from './Photobooth.module.css';
 // Images & Overlays
 import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
 
-// Helper function to draw a star
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -33,7 +32,6 @@ const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => 
   ctx.fill();
 }
 
-// Helper function to draw a heart
 const drawHeart = (ctx, x, y, width, height, color = 'red') => {
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -66,6 +64,28 @@ const drawHeart = (ctx, x, y, width, height, color = 'red') => {
     ctx.closePath();
     ctx.fill();
 }
+
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  
+  return `${month}/${day}/${year}`;
+}
+
+const formatDateNoSlash = (timestamp) => {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  
+  return `${month}${day}${year}`;
+}
+
+
+
+// ----------------------------------------- //
 
 const PhotoStrip = () => {
   const { photos } = useContext(PhotoContext);
@@ -176,7 +196,7 @@ const PhotoStrip = () => {
           if (pikachuFrameImg) {
             context.drawImage(pikachuFrameImg, 0, 0, width, height);
         } else if (!isLoadingAssets) {
-            console.warn("Party frame asset not loaded");
+            console.warn("Pikachu frame asset not loaded");
         }
         break;
 
@@ -276,7 +296,6 @@ const PhotoStrip = () => {
   }, [photos, backgroundColor, frameTheme, isLoadingAssets, drawFrameOverlay]);
 
   useEffect(() => {
-    // Generate only if photos are ready AND assets are loaded
     if (photos && photos.length === 4 && !isLoadingAssets) {
       generatePhotostrip();
     }
@@ -297,20 +316,29 @@ const PhotoStrip = () => {
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || isLoadingAssets) {
+      alert("Cannot download: Canvas not ready or assets are loading.");
+      return;
+    }
 
-    // Get the data URL (defaults to PNG)Í
-    const image = canvas.toDataURL("image/png");
-
-    // Create a temporary link element
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = `photostrip_${Date.now()}.png`; // Filename for the downloaded image
-
-    // Append link to body, click it, and remove it
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `photostrip_${formatDateNoSlash(Date.now())}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading photostrip:", error);
+      let userMessage = "Failed to download photostrip.";
+      if (error.name === 'SecurityError') {
+          userMessage += "\n\nThis might be due to browser security restrictions, especially if the images used came from a different origin (like a webcam stream directly drawn to canvas without proper handling).";
+      } else {
+          userMessage += `\n\nError details: ${error.message}`;
+      }
+      alert(userMessage);
+    }
   };
   
   return (
@@ -323,31 +351,39 @@ const PhotoStrip = () => {
 
         :
 
-        <div>
+        <div className={styles.photoStripMainContainer}>
           {/* Customize Buttons */}
+
           <div className={styles.customizeButtonsContainer}>
-            <p>customize buttons go here</p>
+            <h2 className={styles.customizePhotoStripH2}>Customization</h2>
 
             <div>
-              <h3>Change Background Color:</h3>
+              <h3 className="title">Change Background Color:</h3>
 
-              <div className={styles.customizeColorsContainer}>
-                <button onClick={() => setBackgroundColor("white")} className={styles.colorButton}>White</button>
-                <button onClick={() => setBackgroundColor("black")} className={styles.colorButton}>Black</button>
-                <button onClick={() => setBackgroundColor("lightblue")} className={styles.colorButton}>Light Blue</button>
-                <button onClick={() => setBackgroundColor("lightpink")} className={styles.colorButton}>Light Pink</button>
-                <button onClick={() => setBackgroundColor("#f0f0f0")} className={styles.colorButton}>Light Gray</button>
+              <div className={styles.customizeStylesContainer }>
+                <button onClick={() => setBackgroundColor("white")} className={`${styles.colorButton} white`}></button>
+                <button onClick={() => setBackgroundColor("black")} className={`${styles.colorButton} black`}></button>
+                <button onClick={() => setBackgroundColor("#f0f0f0")} className={`${styles.colorButton} gray`}></button>
+                <button onClick={() => setBackgroundColor("#f53843")} className={`${styles.colorButton} red`}></button>
+                <button onClick={() => setBackgroundColor("#f7bb3f")} className={`${styles.colorButton} orange`}></button>
+                <button onClick={() => setBackgroundColor("#fdea58")} className={`${styles.colorButton} yellow`}></button>
+                <button onClick={() => setBackgroundColor("#4bee4d")} className={`${styles.colorButton} green`}></button>
+                <button onClick={() => setBackgroundColor("#7cd3ff")} className={`${styles.colorButton} blue`}></button>
+                <button onClick={() => setBackgroundColor("#c631f7")} className={`${styles.colorButton} purple`}></button>
+                <button onClick={() => setBackgroundColor("#fed8ff")} className={`${styles.colorButton} pink`}></button>
               </div>
             </div>
 
             <div>
-              <p>Customize Frame/Stickers:</p>
+              <h3 className="title">Change Frame/Stickers:</h3>
 
-              <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
-              <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
-              <button onClick={() => setFrameTheme('hearts')} className={styles.frameButton}>Hearts</button>
-              <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
-              <button onClick={() => setFrameTheme('vintage')} className={styles.frameButton}>Vintage Border</button>
+              <div className={styles.customizeStylesContainer}>
+                <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
+                <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
+                <button onClick={() => setFrameTheme('hearts')} className={styles.frameButton}>Hearts</button>
+                <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
+                <button onClick={() => setFrameTheme('vintage')} className={styles.frameButton}>Vintage Border</button>
+              </div>
             </div>
           </div>
 
