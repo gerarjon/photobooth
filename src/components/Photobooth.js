@@ -8,6 +8,7 @@ import { PhotoContext } from '@/context/PhotoState';
 const Photobooth = () => {
   const { photos, setPhotos } = useContext(PhotoContext)
   const [isCapturing, setIsCapturing] = useState(false);
+  const [photosComplete, setPhotosComplete] = useState(false);
   const [countdown, setCountdown] = useState(null);
   const [countdownTime, setCountdownTime] = useState(3);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -99,10 +100,23 @@ const Photobooth = () => {
     
     return photoData;
   };
+
+  const handleToPreview = () => {
+    try {
+      setTimeout(()=> {
+        stopCamera();
+        router.push("/photostrip");
+      }, 300);
+    } catch (error) {
+      console.error("Error nagivating to preview:", error);
+      setImages([...newCapturedPhotos]);
+    }
+  }
   
   // Initialize Countdown & Capture Sequence
   const startCountdown = () => {
     if (isCapturing) return;
+    setPhotosComplete(false);
     setIsCapturing(true);
     setCountdown(3);
     setCurrentPhotoIndex(0);
@@ -115,17 +129,8 @@ const Photobooth = () => {
       if (photosTaken >= 4) {
         setCountdown(null);
         setIsCapturing(false);
-
-        try {
-          setPhotos([...newCapturedPhotos]);
-          setTimeout(()=> {
-            stopCamera();
-            router.push("/photostrip");
-          }, 300);
-        } catch (error) {
-          console.error("Error nagivating to preview:", error);
-          setImages([...newCapturedPhotos]);
-        }
+        setPhotosComplete(true);
+        setPhotos([...newCapturedPhotos]);
         return;
       }
 
@@ -168,30 +173,44 @@ const Photobooth = () => {
   return (
     <div className={styles.photoBooth}>
       <div className={styles.boothContainer}>
+
+        {/* Camera Section */}
         <div className={styles.cameraSection}>
-            <div className={styles.videoContainer}>
-              <video 
-                ref={videoRef} 
-                autoPlay 
-                playsInline
-                muted
-                className={styles.video}
-              />
-              {countdown !== null && (
-                <div className={styles.countdown}>{countdown}</div>
-              )}
-            </div>
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-          
+          <div className={styles.videoContainer}>
+            <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline
+              muted
+              className={styles.video}
+            />
+            {countdown !== null && (
+              <div className={styles.countdown}>{countdown}</div>
+            )}
+          </div>
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+        </div>
+
+        {/* Control Buttons */}
+        <div className={styles.controlButtonsContainer}>
           {!isCapturing && (
             <button 
               className={styles.startButton}
               onClick={startCountdown}
             >
-              Start Photo Booth
+              {!photosComplete ? "Start" : "Redo"}
             </button>
           )}
-          
+
+          {!isCapturing && photosComplete && (
+            <button
+              className={styles.nextButton}
+              onClick={handleToPreview}
+            >
+              Next
+            </button>
+          )}
+
           {isCapturing && (
             <div className={styles.status}>
               Taking photo {currentPhotoIndex} of 4
@@ -199,7 +218,7 @@ const Photobooth = () => {
           )}
         </div>
 
-        {/* images preview */}
+        {/* Images Preview */}
         <div className={styles.photoPreviewContainer}>
           <div className={styles.photoPreview}>
             {photos.map((image, index) => (
@@ -208,11 +227,6 @@ const Photobooth = () => {
                 key={index}
                 src={image}
                 alt={`Captured ${index + 1}`}
-                // style={{
-                //   width: "160",
-                //   height: "120px",
-                //   objectFit: "cover",
-                // }}
               />
             ))}
           </div>

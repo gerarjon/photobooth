@@ -6,7 +6,7 @@ import Photobooth from "../components/Photobooth"
 
 export default function Home() {
   return (
-    <div className={`container`}>
+    <div>
       <Head>
         <title>Photo Booth</title>
         <meta name="description" content="Photo Booth | Free Online" />
@@ -14,7 +14,6 @@ export default function Home() {
       </Head>
 
       <main className="main">
-        <h1>Photo Booth</h1>
         <Photobooth />
       </main>
     </div>
