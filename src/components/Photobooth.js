@@ -176,19 +176,30 @@ const Photobooth = () => {
 
         {/* Camera Section */}
         <div className={styles.cameraSection}>
-          <div className={styles.videoContainer}>
+          <div
+            className={styles.videoContainer}
+            style={{
+              ...(cameraPermission === "pending" && { backgroundColor: "#444444" })
+            }}
+          >
             <video 
               ref={videoRef} 
               autoPlay 
               playsInline
               muted
               className={styles.video}
+              style={{ visibility: cameraPermission === "pending" ? "hidden" : "visible" }}
             />
             {countdown !== null && (
               <div className={styles.countdown}>{countdown}</div>
             )}
           </div>
+
           <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+          {cameraPermission === "pending" && (
+            <p className={styles.pendingText}>Waiting for Camera Access...</p>
+          )}
         </div>
 
         {/* Control Buttons */}

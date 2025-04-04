@@ -24,19 +24,18 @@
 
 .videoContainer {
   position: relative;
+  width: 100%;
+  height: 450px;
   border: 3px solid transparent;
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 800px;
-
 }
 
 .video {
   transform: scaleX(-1);
-  width: 100%;
-  max-height: 400px;
+  max-width: 600px;
+  height: 100%;
   display: block;
 }
 
@@ -111,20 +110,35 @@
   margin: 20px 0;
 }
 
+.pendingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
 .photoPreviewContainer {
   width: 100%;
   max-width: 800px;
+  height: 110px;
   padding: 5px;
+  display: flex;
 }
 
 .photoPreview {
+  width: 100%;
+  margin-left: 2em;
   display: flex;
   gap: 1em;
 }
 
 .photoPreviewSingle {
   width: 120px;
-  object-fit: "cover";
+  object-fit: cover;
   border-radius: 15px;
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
 }
@@ -132,7 +146,7 @@
 .photoStripContainer {
   grid-area: photoStripContainer;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   margin: 2em 0;
 }
 
@@ -169,6 +183,7 @@
   height: 50px;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1em;
 }
 
