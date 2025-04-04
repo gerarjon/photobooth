@@ -188,7 +188,10 @@ const Photobooth = () => {
               playsInline
               muted
               className={styles.video}
-              style={{ visibility: cameraPermission === "pending" ? "hidden" : "visible" }}
+              style={{ 
+                visibility: cameraPermission === "pending" ? "hidden" : "visible", 
+                height: cameraPermission === "pending" ? "450px" : "100%"
+              }}
             />
             {countdown !== null && (
               <div className={styles.countdown}>{countdown}</div>
@@ -208,6 +211,7 @@ const Photobooth = () => {
             <button 
               className={styles.startButton}
               onClick={startCountdown}
+              disabled={cameraPermission === "pending"}
             >
               {!photosComplete ? "Start" : "Redo"}
             </button>

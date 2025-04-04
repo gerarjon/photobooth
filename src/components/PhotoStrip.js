@@ -369,7 +369,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setBackgroundColor("#fdea58")} className={`${styles.colorButton} yellow`}></button>
                 <button onClick={() => setBackgroundColor("#4bee4d")} className={`${styles.colorButton} green`}></button>
                 <button onClick={() => setBackgroundColor("#7cd3ff")} className={`${styles.colorButton} blue`}></button>
-                <button onClick={() => setBackgroundColor("#c631f7")} className={`${styles.colorButton} purple`}></button>
+                <button onClick={() => setBackgroundColor("#d75cfe")} className={`${styles.colorButton} purple`}></button>
                 <button onClick={() => setBackgroundColor("#fed8ff")} className={`${styles.colorButton} pink`}></button>
               </div>
             </div>

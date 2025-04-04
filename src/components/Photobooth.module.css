@@ -1,7 +1,7 @@
 /* components/PhotoBooth.module.css */
 .photoBooth {
-  max-width: 800px;
-  min-height: 768px;
+  max-width: 100%;
+  min-height: 80vh;
   margin: 0 auto;
   padding: 5em 0;
 }
@@ -12,6 +12,8 @@
   align-items: center;
   gap: 20px;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .cameraSection {
@@ -25,18 +27,22 @@
 .videoContainer {
   position: relative;
   width: 100%;
-  height: 450px;
+  max-width: 800px;
+  margin: 0 auto;
   border: 3px solid transparent;
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  aspect-ratio: 4/3;
 }
 
 .video {
-  transform: scaleX(-1);
-  max-width: 600px;
+  width: 100%;
   height: 100%;
+  aspect-ratio: 4/3;
+  transform: scaleX(-1);
   display: block;
+  object-fit: cover;
 }
 
 .countdown {
@@ -65,6 +71,12 @@
   background-color: #4CAF50;
 }
 
+.startButton:disabled {
+  background-color: #9E9E9E;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .nextButton {
   background-color: #ff74ca;
 }
@@ -73,8 +85,16 @@
   background-color: #f44336;
 }
 
-.startButton:hover, .downloadButton:hover, .shareButton:hover {
+.downloadButton {
+  background-color: #27cbff;
+}
+
+.startButton:hover:not(:disabled), .downloadButton:hover, .shareButton:hover {
   background-color: #388E3C;
+}
+
+.startButton:disabled:hover {
+  background-color: #9E9E9E;
 }
 
 .nextButton:hover {
@@ -83,6 +103,10 @@
 
 .startOverButton:hover {
   background-color: #d32f2f;
+}
+
+.downloadButton:hover {
+  background-color: #2775ff;
 }
 
 .status {
@@ -114,7 +138,6 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   color: #fff;
   font-size: 1.2em;
@@ -124,20 +147,23 @@
 .photoPreviewContainer {
   width: 100%;
   max-width: 800px;
-  height: 110px;
+  height: auto;
+  min-height: 110px;
   padding: 5px;
   display: flex;
 }
 
 .photoPreview {
   width: 100%;
-  margin-left: 2em;
   display: flex;
   gap: 1em;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .photoPreviewSingle {
   width: 120px;
+  height: auto;
   object-fit: cover;
   border-radius: 15px;
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
@@ -152,6 +178,7 @@
 
 .photoStrip {
   width: 60%;
+  max-width: 500px;
   margin: 0 auto;
   border-radius: 5px;
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
@@ -159,10 +186,11 @@
 
 .photoStripMainContainer {
   display: grid;
-  grid-template-columns: auto minmax(100px, 300px);
+  grid-template-columns: 1fr;
   grid-gap: 1rem;
   grid-template-areas:
-    "photoStripContainer customizeButtonsContainer";
+    "photoStripContainer"
+    "customizeButtonsContainer";
 }
 
 .customizeButtonsContainer {
@@ -211,16 +239,74 @@
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.5);
 }
 
-@media (max-width: 600px) {
-  .photoStrip.grid {
-    width: 300px;
+/* Media Queries for responsive design */
+@media only screen and (max-width: 768px) {
+  .photoBooth {
+    padding: 1em 0;
   }
-  
-  .photoStrip.vertical {
-    width: 150px;
-  }
-  
-  .actionButtons {
+
+  .boothContainer {
+    height: 80vh;
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .videoContainer {
+    max-width: 95%;
+  }
+  
+  .countdown {
+    font-size: 80px;
+  }
+  
+  .photoPreviewContainer {
+    max-width: 95%;
+  }
+  
+  .photoPreview {
+    margin-left: 0;
+    justify-content: center;
+  }
+  
+  .photoPreviewSingle {
+    width: 90px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .countdown {
+    font-size: 60px;
+  }
+  
+  .photoStripMainContainer {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "photoStripContainer"
+      "customizeButtonsContainer";
+  }
+  
+  .photoStrip {
+    width: 80%;
+  }
+  
+  .controlButtonsContainer {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+  
+  .startButton, .downloadButton, .shareButton, .startOverButton, .nextButton {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .photoStripMainContainer {
+    grid-template-columns: auto minmax(100px, 300px);
+    grid-template-areas:
+      "photoStripContainer customizeButtonsContainer";
   }
 }
