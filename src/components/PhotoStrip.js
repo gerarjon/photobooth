@@ -232,6 +232,17 @@ const PhotoStrip = () => {
     canvas.width = imgWidth + borderSize * 2;
     canvas.height = totalHeight;
 
+    const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, 'red');
+    gradient.addColorStop(1/6, 'orange');
+    gradient.addColorStop(2/6, 'yellow');
+    gradient.addColorStop(3/6, 'green');
+    gradient.addColorStop(4/6, 'blue');
+    gradient.addColorStop(5/6, 'indigo');
+    gradient.addColorStop(1, 'violet');
+
+    if (backgroundColor === "gradient") setBackgroundColor(gradient);
+
     context.fillStyle = backgroundColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -371,6 +382,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setBackgroundColor("#7cd3ff")} className={`${styles.colorButton} blue`}></button>
                 <button onClick={() => setBackgroundColor("#d75cfe")} className={`${styles.colorButton} purple`}></button>
                 <button onClick={() => setBackgroundColor("#fed8ff")} className={`${styles.colorButton} pink`}></button>
+                <button onClick={() => setBackgroundColor("gradient")} className={`${styles.colorButton} rainbow`}></button>
               </div>
             </div>
 

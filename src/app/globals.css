@@ -76,3 +76,8 @@ h2 {
 .pink {
   background-color: #fed8ff;
 }
+
+.rainbow {
+  background-image: url(../assets/icons/rainbow.png);
+  background-position: center;
+}
