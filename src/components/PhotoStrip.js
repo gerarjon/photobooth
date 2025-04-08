@@ -8,6 +8,7 @@ import styles from './Photobooth.module.css';
 
 // Images & Overlays
 import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
+import twiceOverlayUrl from '@/assets/frames/twiceOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
@@ -98,6 +99,7 @@ const PhotoStrip = () => {
   // --- Map theme names/IDs to imported asset URLs ---
   const assetMap = useRef({ 
     pikachu_frame: pikachuOverlayUrl,
+    twice_frame: twiceOverlayUrl,
   }).current;
 
   // --- Effect to preload image assets on mount ---
@@ -169,19 +171,6 @@ const PhotoStrip = () => {
         drawStar(context, borderSize + 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)'); // Light blue
         drawStar(context, width - borderSize - 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)');
         break;
-      case 'vintage':
-        context.strokeStyle = 'rgba(139, 69, 19, 0.7)'; // SaddleBrown slightly transparent
-        context.lineWidth = 8;
-        // Draw an inner border rect slightly inside the main border
-        const innerMargin = 10; // Offset from the edge of the strip border
-        context.strokeRect(
-            innerMargin,
-            innerMargin,
-            width - 2 * innerMargin,
-            height - 2 * innerMargin
-        );
-        context.lineWidth = 1; // Reset line width
-        break;
 
         // --- Add Case for Image-based Frame ---
         // case 'floral_frame':
@@ -197,6 +186,15 @@ const PhotoStrip = () => {
             context.drawImage(pikachuFrameImg, 0, 0, width, height);
         } else if (!isLoadingAssets) {
             console.warn("Pikachu frame asset not loaded");
+        }
+        break;
+
+      case 'twice_frame':
+        const twiceFrameImg = loadedAssets.twice_frame;
+          if (twiceFrameImg) {
+            context.drawImage(twiceFrameImg, 0, 0, width, height);
+        } else if (!isLoadingAssets) {
+            console.warn("Twice frame asset not loaded");
         }
         break;
 
@@ -392,9 +390,9 @@ const PhotoStrip = () => {
               <div className={styles.customizeStylesContainer}>
                 <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
                 <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
+                <button onClick={() => setFrameTheme('twice_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>Twice</button>
                 <button onClick={() => setFrameTheme('hearts')} className={styles.frameButton}>Hearts</button>
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
-                <button onClick={() => setFrameTheme('vintage')} className={styles.frameButton}>Vintage Border</button>
               </div>
             </div>
           </div>

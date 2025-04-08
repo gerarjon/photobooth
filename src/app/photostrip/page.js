@@ -1,5 +1,10 @@
 import PhotoStrip from "@/components/PhotoStrip";
 
+export const metadata = {
+  title: "Photobooth | Customize",
+  description: "Customize your photostrip with various colors and overlays. Photobooth Web Application made by Gerar.",
+};
+
 const Preview = () => {
   return (
     <div className="container">

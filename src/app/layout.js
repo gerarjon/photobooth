@@ -1,5 +1,6 @@
 import "./globals.css";
 import { PhotoStateProvider } from "@/context/PhotoState";
+import { Analytics } from "@vercel/analytics/react"
 import { Rubik } from 'next/font/google'
  
 const rubik = Rubik({
@@ -9,7 +10,7 @@ const rubik = Rubik({
 
 export const metadata = {
   title: "Photobooth | Free",
-  description: "Photobooth Web Application made by Gerar",
+  description: "Free Photobooth Web Application made by Gerar @gerarjon",
 };
 
 export default function RootLayout({ children }) {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${rubik.className}`}>
       <body className="true">
         <PhotoStateProvider>{children}</PhotoStateProvider>
+        <Analytics />
       </body>
     </html>
   );
