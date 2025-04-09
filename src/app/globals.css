@@ -4,6 +4,12 @@
   margin: 0;
 }
 
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+
 html {
   background-color: #fff;
 }
@@ -80,4 +86,68 @@ h2 {
 .rainbow {
   background-image: url(../assets/icons/rainbow.png);
   background-position: center;
+}
+
+.footer {
+  
+}
+
+.footer-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 45px;
+  text-align: right;
+  right: 3%;
+  font-family: "Montserrat";
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+.footer-bottom ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-bottom li {
+  cursor: pointer;
+}
+
+.t-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none; 
+  padding-bottom: 3px  
+}
+
+.t-link::before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #009be6;
+  background-color: #009be6;
+  transform: scaleX(0);
+  transform-origin: 100% 50%;
+  transition: transform .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  content: "";
+}
+
+.t-link:hover::before {
+  transform: scaleX(1);
+}
+
+.footer-bottom span{
+  color: #009be6;
+}
+
+.github-icon {
+  background: url(../assets/icons/github.png);
+  background-size: contain;
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
 }
