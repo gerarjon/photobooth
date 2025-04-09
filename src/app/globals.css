@@ -151,3 +151,15 @@ h2 {
   height: 1.2em;
   display: block;
 }
+
+.privacy-policy hr {
+  margin-bottom: 1em;
+}
+
+.privacy-policy h3 {
+  margin-bottom: 0.5em;
+}
+
+.privacy-policy p {
+  margin-bottom: 1em;
+}
