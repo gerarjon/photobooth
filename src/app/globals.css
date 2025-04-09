@@ -89,15 +89,15 @@ h2 {
 }
 
 .footer {
-  
+  width: 100%;
 }
 
 .footer-bottom {
-  position: absolute;
+  position: relative;
   width: 100%;
-  bottom: 45px;
+  bottom: 35px;
+  padding-right: 3%;
   text-align: right;
-  right: 3%;
   font-family: "Montserrat";
   font-size: 0.9em;
   font-weight: 700;
