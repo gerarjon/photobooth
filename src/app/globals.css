@@ -88,8 +88,44 @@ h2 {
   background-position: center;
 }
 
+/* Navbar */
+.navbar {
+  position: fixed;
+  width: 100%;
+  padding: 20px;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.logo-container {
+  height: 3em;
+}
+
+.logo {
+  height: 100%;
+  background-image: url(../assets/icons/logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  content: "";
+}
+
+/* Footer  */
+
 .footer {
   width: 100%;
+}
+
+.footer-logo {
+  position: absolute;
+  bottom: -3em;
+  height: 10em;
+  width: 100%;
+  background-image: url(../assets/icons/logoFooter.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  content: "";
+  z-index: -99;
 }
 
 .footer-bottom {
@@ -101,6 +137,7 @@ h2 {
   font-family: "Montserrat";
   font-size: 0.9em;
   font-weight: 700;
+  z-index: 99;
 }
 
 .footer-bottom ul {
@@ -152,6 +189,8 @@ h2 {
   display: block;
 }
 
+/* Privary Policy */
+
 .privacy-policy hr {
   margin-bottom: 1em;
 }
@@ -162,4 +201,12 @@ h2 {
 
 .privacy-policy p {
   margin-bottom: 1em;
+}
+
+/* Media Queries for responsive design */
+@media only screen and (max-width: 768px) {
+  .footer-logo{
+    bottom: -1em;
+    height: 5em;
+  }
 }

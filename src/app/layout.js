@@ -1,7 +1,8 @@
 import "./globals.css";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { PhotoStateProvider } from "@/context/PhotoState";
 import { Analytics } from "@vercel/analytics/react";
-import Footer from "@/components/Footer";
 import { Rubik } from 'next/font/google';
 import { Montserrat } from "next/font/google";
  
@@ -16,7 +17,7 @@ const montserrat = Montserrat({
 })
 
 export const metadata = {
-  title: "Photobooth | Free",
+  title: "PicturanClub | Free Online Photobooth",
   description: "Free Photobooth Web Application made by Gerar @gerarjon",
 };
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.className}`}>
       <body className="container">
+        <Navbar />
         <PhotoStateProvider>{children}</PhotoStateProvider>
         <Analytics />
         <Footer />

@@ -8,6 +8,7 @@ const Footer = () => {
     <footer id="footer" className="footer">
       <div className="">
         <div className="footer-bottom">
+          <div className="footer-logo"></div>
           <ul>
             <li className="t-link">
               <Link href="/privacy">Privacy</Link>
