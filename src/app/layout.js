@@ -10,11 +10,13 @@ import { Montserrat } from "next/font/google";
 const rubik = Rubik({
   weight: 'variable',
   subsets: ['latin'],
+  preload: true,
 })
 
 const montserrat = Montserrat({
   weight: 'variable',
   subsets: ['latin'],
+  preload: true,
 })
 
 export const metadata = {

@@ -235,10 +235,10 @@ const Photobooth = () => {
 
         {/* Images Preview */}
         <div className={styles.photoPreviewContainer}>
-          <div className={styles.photoPreview}>
+          <div className={`${styles.photoPreview} ${photosComplete ? styles.center : styles.left}`}>
             {photos.map((image, index) => (
               <img
-                className={styles.photoPreviewSingle}
+                className={`${styles.photoPreviewSingle}`}
                 key={index}
                 src={image}
                 alt={`Captured ${index + 1}`}

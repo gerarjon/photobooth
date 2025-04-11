@@ -91,6 +91,7 @@ h2 {
 /* Navbar */
 .navbar {
   position: fixed;
+  height: 7em;
   width: 100%;
   padding: 20px;
   top: 0;
@@ -99,16 +100,14 @@ h2 {
 }
 
 .logo-container {
-  height: 3em;
+  position: relative;
+  height: 100%;
+  width: 20%;
 }
 
-.logo {
-  height: 100%;
-  background-image: url(../assets/icons/logo.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  content: "";
-}
+/* .logo {
+  height: auto;
+} */
 
 /* Footer  */
 
@@ -121,7 +120,7 @@ h2 {
   bottom: -3em;
   height: 10em;
   width: 100%;
-  background-image: url(../assets/icons/logoFooter.png);
+  /* background-image: url(../assets/icons/logoFooter.png); */
   background-size: contain;
   background-repeat: no-repeat;
   content: "";
@@ -137,7 +136,7 @@ h2 {
   font-family: "Montserrat";
   font-size: 0.9em;
   font-weight: 700;
-  z-index: 99;
+  z-index: 3;
 }
 
 .footer-bottom ul {
@@ -204,6 +203,18 @@ h2 {
 }
 
 /* Media Queries for responsive design */
+@media only screen and (max-width: 480px) {
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-container {
+    object-fit: contain;
+    width: 70%;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .footer-logo{
     bottom: -1em;
