@@ -202,6 +202,16 @@ h2 {
   margin-bottom: 1em;
 }
 
+button {
+  border-radius: 30px;
+  cursor: pointer;
+  /* transition: border-radius 1s ease-in-out; */
+}
+
+button:hover {
+  border-radius: 10px;
+}
+
 /* Media Queries for responsive design */
 @media only screen and (max-width: 480px) {
   .navbar {

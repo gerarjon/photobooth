@@ -62,9 +62,7 @@
   font-size: 18px;
   color: white;
   border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease-in-out;
 }
 
 .startButton {
@@ -176,6 +174,7 @@
   height: auto;
   object-fit: cover;
   border-radius: 15px;
+  border: 1px solid black;
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
 }
 
