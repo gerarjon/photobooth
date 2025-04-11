@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Picturan Club | Privacy Policy",
+  title: "PicturanKo | Privacy Policy",
   description: "Privacy policy. Customize your photostrip with various colors and overlays. Photobooth Web Application made by Gerar.",
 };
 
@@ -14,7 +14,7 @@ const Privacy = () => {
           <li>
             <h3>Introduction</h3>
 
-            <p>Welcome to <b>PicturanClub</b>. We are committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our web application (the <b>&quot;Service&quot;</b>).</p>
+            <p>Welcome to <b>PicturanKo</b>. We are committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our web application (the <b>&quot;Service&quot;</b>).</p>
             
             <p>Our core privacy commitment is simple: We do not store your photos or related personal data generated through the photobooth features of our Service.</p>
           </li>
