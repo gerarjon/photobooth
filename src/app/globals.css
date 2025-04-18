@@ -255,6 +255,10 @@ button:hover {
     object-fit: contain;
     width: 70%;
   }
+  .footer-logo {
+    width: 45%;
+    transform: translateY(15%);
+  }
 }
 
 @media only screen and (max-width: 768px) {

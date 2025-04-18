@@ -313,6 +313,17 @@
   .photoStrip {
     width: 80%;
   }
+
+  .photoPreview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 10px;
+  }
+
+  .photoPreview img {
+    align-self: center;
+    justify-self: center;
+  }
   
   .controlButtonsContainer {
     height: auto;
