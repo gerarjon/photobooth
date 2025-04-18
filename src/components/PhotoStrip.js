@@ -8,6 +8,7 @@ import styles from './Photobooth.module.css';
 // Images & Overlays
 import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
 import twiceOverlayUrl from '@/assets/frames/twiceOverlay.png';
+import chickenOverlayUrl from '@/assets/frames/chickenOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
@@ -99,6 +100,7 @@ const PhotoStrip = () => {
   const assetMap = useRef({ 
     pikachu_frame: pikachuOverlayUrl,
     twice_frame: twiceOverlayUrl,
+    chicken_frame: chickenOverlayUrl,
   }).current;
 
   // --- Effect to preload image assets on mount ---
@@ -195,6 +197,15 @@ const PhotoStrip = () => {
         } else if (!isLoadingAssets) {
             console.warn("Twice frame asset not loaded");
         }
+        break;
+
+      case 'chicken_frame':
+        const chickenFrameImg = loadedAssets.chicken_frame;
+          if (chickenFrameImg) {
+            context.drawImage(chickenFrameImg, 0, 0, width, height);
+          } else if (!isLoadingAssets) {
+            console.warn("Chicken frame asset not loaded");
+          }
         break;
 
       case 'none':
@@ -388,9 +399,9 @@ const PhotoStrip = () => {
 
               <div className={styles.customizeStylesContainer}>
                 <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
-                <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
-                <button onClick={() => setFrameTheme('twice_frame')} className={styles.themeButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>Twice</button>
-                <button onClick={() => setFrameTheme('hearts')} className={styles.frameButton}>Hearts</button>
+                <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
+                <button onClick={() => setFrameTheme('twice_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>TWICE</button>
+                <button onClick={() => setFrameTheme('chicken_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.chicken_frame}>Chicken</button>
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
             </div>

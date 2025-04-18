@@ -66,7 +66,7 @@
 }
 
 .startButton {
-  background-color: #4CAF50;
+  background-color: #fd8798;
 }
 
 .startButton:disabled {
@@ -76,11 +76,11 @@
 }
 
 .nextButton {
-  background-color: #ff74ca;
+  background-color: #7991ff;
 }
 
 .startOverButton {
-  background-color: #f44336;
+  background-color: #ff89ba;
 }
 
 .downloadButton {
@@ -88,7 +88,7 @@
 }
 
 .startButton:hover:not(:disabled), .downloadButton:hover, .shareButton:hover {
-  background-color: #388E3C;
+  background-color: #ff516b;
 }
 
 .startButton:disabled:hover {
@@ -96,11 +96,11 @@
 }
 
 .nextButton:hover {
-  background-color: #ee3baa;
+  background-color: #274bed;
 }
 
 .startOverButton:hover {
-  background-color: #d32f2f;
+  background-color: #eb5d5d;
 }
 
 .downloadButton:hover {
@@ -241,13 +241,25 @@
   transition: all 0.2s ease;
 }
 
-.colorButton:hover {
+.colorButton:hover, .frameButton:hover {
   transform: scale(1.1);
 }
 
-.colorButton:active {
+.colorButton:active, .frameButton:active {
   border: 2px solid #fff;
   box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.5);
+}
+
+.frameButton {
+  border: 2px solid transparent;
+  box-shadow: 0 1px 5px 1px rgba(126, 115, 115, 0.25);
+  cursor: pointer;
+  height: 30px;
+  width: 60px;
+  border-radius: 50px;
+  color: #fff;
+  background-color: #fd8798;
+  transition: all 0.2s ease;
 }
 
 /* Media Queries for responsive design */

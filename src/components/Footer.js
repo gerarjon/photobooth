@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Link from "next/link";
 
@@ -19,6 +20,9 @@ const Footer = () => {
               <a href="https://github.com/gerarjon/photobooth" target="_blank">
                 <span className="github-icon"></span>
               </a> 
+            </li>
+            <li>
+              <Link href="/"><span className="logo-small"></span></Link>
             </li>
           </ul>
         </div>

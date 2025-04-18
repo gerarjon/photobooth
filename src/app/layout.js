@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./globalicons.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { PhotoStateProvider } from "@/context/PhotoState";
@@ -20,8 +21,8 @@ const montserrat = Montserrat({
 })
 
 export const metadata = {
-  title: "PicturanKo | Free Online Photobooth",
-  description: "Free Photobooth Web Application made by Gerar @gerarjon",
+  title: "PicturanCo | Free Online Photobooth",
+  description: "Your personal online photo booth! You can use this on your desktop, tablet, and phone. Create fun and cute photo strips with frames and stickers - totally free!",
 };
 
 export default function RootLayout({ children }) {

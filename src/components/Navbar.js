@@ -29,7 +29,7 @@ const Navbar = () => {
       <div className="logo-container">
           <Link href="/">
             <img 
-              src="/assets/logo2.png"
+              src="/assets/logoTitle.png"
               alt="Logo" 
               fill="true"
               style={{

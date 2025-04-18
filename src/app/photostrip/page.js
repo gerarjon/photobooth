@@ -1,7 +1,7 @@
 import PhotoStrip from "@/components/PhotoStrip";
 
 export const metadata = {
-  title: "PicturanKo | Customize",
+  title: "PicturanCo | Customize",
   description: "Customize your photostrip with various colors and overlays. Free Photobooth Web Application made by Gerar.",
 };
 
