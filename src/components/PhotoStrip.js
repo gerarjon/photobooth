@@ -9,6 +9,7 @@ import styles from './Photobooth.module.css';
 import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
 import twiceOverlayUrl from '@/assets/frames/twiceOverlay.png';
 import chickenOverlayUrl from '@/assets/frames/chickenOverlay.png';
+import dogOverlayUrl from '@/assets/frames/dogOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
@@ -101,6 +102,7 @@ const PhotoStrip = () => {
     pikachu_frame: pikachuOverlayUrl,
     twice_frame: twiceOverlayUrl,
     chicken_frame: chickenOverlayUrl,
+    dog_frame: dogOverlayUrl,
   }).current;
 
   // --- Effect to preload image assets on mount ---
@@ -207,12 +209,30 @@ const PhotoStrip = () => {
             console.warn("Chicken frame asset not loaded");
           }
         break;
+        
+      case 'dog_frame':
+        const dogFrameImg = loadedAssets.dog_frame;
+          if (dogFrameImg) {
+            context.drawImage(dogFrameImg, 0, 0, width, height);
+          } else if (!isLoadingAssets) {
+            console.warn("Dog frame asset not loaded");
+          }
+        break;
 
       case 'none':
       default:
         break;
     }
   }, [loadedAssets, isLoadingAssets]);
+
+  const drawText = useCallback((context, canvas, totalHeight, borderSize) => {
+    const date = formatDate(Date.now());
+    context.fillStyle = (backgroundColor === "black" || backgroundColor === "gradient") ? "#FFFFFF" : "#000000";
+    context.font = "200 18px Arial";
+    context.textAlign = "center";
+
+    context.fillText(date, canvas.width - borderSize * 1.75 , totalHeight - borderSize / 2);
+  }, [backgroundColor]);
 
   const generatePhotostrip = useCallback(() => {
     const canvas  = canvasRef.current;
@@ -294,6 +314,7 @@ const PhotoStrip = () => {
         imagesLoaded++;
         if (imagesLoaded === totalImages) {
           drawFrameOverlay(context, canvas, frameTheme);
+          drawText(context, canvas, totalHeight, borderSize);
         }
         // Optional: Could add logic here if needed after *all* images are drawn || for when adding text
         // if (imagesLoaded === totalImages) {
@@ -327,7 +348,7 @@ const PhotoStrip = () => {
       context.fillStyle = 'lightgray';
       context.fillRect(0,0, canvas.width, canvas.height);
       context.fillStyle = 'black';
-      context.font = "20px sans-serif";
+      context.font = "bold 30px sans-serif";
       context.textAlign = "center";
       context.fillText("Loading assets...", canvas.width / 2, canvas.height / 2);
     }
@@ -402,6 +423,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setFrameTheme('pikachu_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.pikachu_frame}>Pikachu</button>
                 <button onClick={() => setFrameTheme('twice_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>TWICE</button>
                 <button onClick={() => setFrameTheme('chicken_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.chicken_frame}>Chicken</button>
+                <button onClick={() => setFrameTheme('dog_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.dog_frame}>Dog</button>
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
             </div>
