@@ -231,7 +231,7 @@ const PhotoStrip = () => {
         break;
 
       case 'none':
-        
+
       default:
         break;
     }
@@ -407,10 +407,10 @@ const PhotoStrip = () => {
           {/* Customize Buttons */}
 
           <div className={styles.customizeButtonsContainer}>
-            <h2 className={styles.customizePhotoStripH2}>Customization</h2>
+
 
             <div>
-              <h3 className="title">Change Background Color:</h3>
+              <h4>Frame Color:</h4>
 
               <div className={styles.customizeStylesContainer }>
                 <button onClick={() => setBackgroundColor("white")} className={`${styles.colorButton} white`}></button>
@@ -428,7 +428,7 @@ const PhotoStrip = () => {
             </div>
 
             <div>
-              <h3 className="title">Change Frame/Stickers:</h3>
+              <h4>Overlay & Stickers:</h4>
 
               <div className={styles.customizeStylesContainer}>
                 <button onClick={() => setFrameTheme('none')} className={styles.frameButton}>None</button>
