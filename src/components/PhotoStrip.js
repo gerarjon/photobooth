@@ -10,6 +10,7 @@ import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
 import twiceOverlayUrl from '@/assets/frames/twiceOverlay.png';
 import chickenOverlayUrl from '@/assets/frames/chickenOverlay.png';
 import dogOverlayUrl from '@/assets/frames/dogOverlay.png';
+import susOverlayUrl from '@/assets/frames/susOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
@@ -103,6 +104,7 @@ const PhotoStrip = () => {
     twice_frame: twiceOverlayUrl,
     chicken_frame: chickenOverlayUrl,
     dog_frame: dogOverlayUrl,
+    sus_frame: susOverlayUrl,
   }).current;
 
   // --- Effect to preload image assets on mount ---
@@ -218,8 +220,18 @@ const PhotoStrip = () => {
             console.warn("Dog frame asset not loaded");
           }
         break;
+        
+      case 'sus_frame':
+        const susFrameImg = loadedAssets.sus_frame;
+          if (susFrameImg) {
+            context.drawImage(susFrameImg, 0, 0, width, height);
+          } else if (!isLoadingAssets) {
+            console.warn("Sus frame asset not loaded");
+          }
+        break;
 
       case 'none':
+        
       default:
         break;
     }
@@ -333,7 +345,7 @@ const PhotoStrip = () => {
         imagesLoaded++; // Still count it to avoid waiting forever
       };
     });
-  }, [photos, backgroundColor, frameTheme, isLoadingAssets, drawFrameOverlay]);
+  }, [photos, backgroundColor, frameTheme, isLoadingAssets, drawFrameOverlay, drawText]);
 
   useEffect(() => {
     if (photos && photos.length === 4 && !isLoadingAssets) {
@@ -424,6 +436,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setFrameTheme('twice_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>TWICE</button>
                 <button onClick={() => setFrameTheme('chicken_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.chicken_frame}>Chicken</button>
                 <button onClick={() => setFrameTheme('dog_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.dog_frame}>Dog</button>
+                <button onClick={() => setFrameTheme('sus_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.sus_frame}>Sus</button>
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
             </div>
