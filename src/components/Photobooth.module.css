@@ -57,9 +57,9 @@
 }
 
 .startButton, .downloadButton, .shareButton, .startOverButton, .nextButton {
-  padding: 12px 24px;
+  padding: 12px 16px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   color: white;
   border: none;
   transition: all 0.3s ease-in-out;
@@ -179,16 +179,25 @@
 }
 
 .photoStripContainer {
-  grid-area: photoStripContainer;
+  grid-area: photoStripContainer;;
   display: flex;
   justify-content: center;
-  margin: 2em 0;
+  margin: 2em;
+}
+
+.vertical {
+  max-width: 225px;
+}
+
+.horizontal {
+  max-width: 500px;
 }
 
 .photoStrip {
-  width: 60%;
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 100%;
+  height: min-content;
+  object-fit: contain;
+  display: block; 
   border-radius: 5px;
   box-shadow: 0px 3px 10px rgba(110, 109, 109, 0.213);
 }
@@ -262,6 +271,19 @@
   transition: all 0.2s ease;
 }
 
+.orientationSelector {
+  display: flex;
+  gap: 8px;
+}
+
+.orientationSelector label {
+  cursor: pointer;
+}
+
+.orientationSelector label input {
+  margin-right: 5px;
+}
+
 /* Media Queries for responsive design */
 @media only screen and (max-width: 768px) {
   .photoBooth {
@@ -296,6 +318,11 @@
   .photoPreviewSingle {
     width: 90px;
   }
+
+  .vertical {
+    max-width: 100%;
+    margin-right: 0;
+  }
 }
 
 @media only screen and (max-width: 480px) {
@@ -309,9 +336,15 @@
       "photoStripContainer"
       "customizeButtonsContainer";
   }
+
+  .photoStripContainer {
+    width: 100%;
+    margin: 1em 0;
+  }
   
   .photoStrip {
-    width: 80%;
+    max-width: 100%;
+    height: auto;
   }
 
   .photoPreview {

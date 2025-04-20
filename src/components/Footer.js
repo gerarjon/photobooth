@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Link from "next/link";
 
@@ -6,10 +5,10 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer id="footer" className="footer">
-      <div className="">
-        <div className="footer-bottom">
-          <div className="footer-logo"></div>
-          <ul>
+      <div className="footer-bottom">
+        <div className="footer-logo"></div>
+        <div className="footer-nav-container">
+          <ul className="footer-nav">
             <li className="t-link">
               <Link href="/privacy">Privacy</Link>
             </li>
@@ -25,8 +24,11 @@ const Footer = () => {
               <Link href="/"><span className="logo-small"></span></Link>
             </li>
           </ul>
+
         </div>
       </div>
+      {/* <div className="">
+      </div> */}
     </footer>
   )
 }

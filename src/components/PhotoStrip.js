@@ -97,6 +97,7 @@ const PhotoStrip = () => {
   const [frameTheme, setFrameTheme] = useState("none");
   const [loadedAssets, setLoadedAssets] = useState({});
   const [isLoadingAssets, setIsLoadingAssets] = useState(true);
+  const [photoOrientation, setPhotoOrientation] = useState('1x4');
 
   // --- Map theme names/IDs to imported asset URLs ---
   const assetMap = useRef({ 
@@ -240,7 +241,7 @@ const PhotoStrip = () => {
   const drawText = useCallback((context, canvas, totalHeight, borderSize) => {
     const date = formatDate(Date.now());
     context.fillStyle = (backgroundColor === "black" || backgroundColor === "gradient") ? "#FFFFFF" : "#000000";
-    context.font = "200 18px Arial";
+    context.font = "200 16px Arial";
     context.textAlign = "center";
 
     context.fillText(date, canvas.width - borderSize * 1.75 , totalHeight - borderSize / 2);
@@ -262,24 +263,64 @@ const PhotoStrip = () => {
 
     const context = canvas.getContext("2d");
 
-    const imgWidth = 400;
-    const imgHeight = 300;
+    // Set dimensions based on orientation using switch
+    let canvasWidth, canvasHeight, imgWidth, imgHeight, targetRatio;
     const borderSize = 40;
     const photoSpacing = 20;
     const textHeight = 50;
-    const totalHeight = (imgHeight * 4) + (photoSpacing * 3) + (borderSize * 2) + textHeight;
-
-    canvas.width = imgWidth + borderSize * 2;
-    canvas.height = totalHeight;
+    
+    switch (photoOrientation) {
+      case '1x4':
+        // Vertical layout (4 photos stacked)
+        imgWidth = 400;
+        imgHeight = 300;
+        targetRatio = imgWidth / imgHeight; 
+        canvasWidth = imgWidth + borderSize * 2;
+        canvasHeight = (imgHeight * 4) + (photoSpacing * 3) + (borderSize * 2) + textHeight;
+        break;
+      
+      case '2x2':
+        // Square/grid layout (2x2)
+        imgWidth = 320;
+        imgHeight = 320;
+        targetRatio = imgWidth / imgHeight; 
+        canvasWidth = (imgWidth * 2) + photoSpacing + (borderSize * 2);
+        canvasHeight = (imgHeight * 2) + photoSpacing + (borderSize * 2) + textHeight;
+        break;
+        
+      case '4x1': // Example of a future layout
+        // Horizontal strip layout (4 photos in a row)
+        imgHeight = 200; // Define a fixed height for images in the strip
+        targetRatio = 4 / 3; // Desired aspect ratio
+        imgWidth = Math.round(imgHeight * targetRatio); // Calculate width (~267)
+        canvasWidth = (imgWidth * 4) + (photoSpacing * 3) + (borderSize * 2);
+        canvasHeight = imgHeight + (borderSize * 2) + textHeight;
+        break;
+        
+      default:
+        // Fall back to vertical as default
+        imgWidth = 400;
+        imgHeight = 300;
+        canvasWidth = imgWidth + borderSize * 2;
+        canvasHeight = (imgHeight * 4) + (photoSpacing * 3) + (borderSize * 2) + textHeight;
+        break;
+    }
+    
+    // Store the total height for drawText function
+    const totalHeight = canvasHeight;
+    
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, 'red');
-    gradient.addColorStop(1/6, 'orange');
-    gradient.addColorStop(2/6, 'yellow');
-    gradient.addColorStop(3/6, 'green');
-    gradient.addColorStop(4/6, 'blue');
-    gradient.addColorStop(5/6, 'indigo');
-    gradient.addColorStop(1, 'violet');
+    gradient.addColorStop(0, '#F53843');
+    gradient.addColorStop(1/6, '#F7BB3F');
+    gradient.addColorStop(2/6, '#FDEA58');
+    gradient.addColorStop(3/6, '#4BEE4D');
+    gradient.addColorStop(4/6, '#7CD3FF');
+    gradient.addColorStop(5/6, '#D75CFE');
+    gradient.addColorStop(1, '#FED8FF');
 
     if (backgroundColor === "gradient") setBackgroundColor(gradient);
 
@@ -288,7 +329,7 @@ const PhotoStrip = () => {
 
     // Keep track of images loaded
     let imagesLoaded = 0;
-    const totalImages = photos.length;
+    const totalImagesToLoad = photos.length;
 
     photos.forEach((imageSrc, index) => {
       const img = new Image();
@@ -296,10 +337,34 @@ const PhotoStrip = () => {
       img.crossOrigin = "Anonymous";
 
       img.onload = () => {
-        const yOffset = borderSize + (imgHeight + photoSpacing) * index;
+        let xOffset, yOffset;
+      
+        switch (photoOrientation) {
+          case '1x4':
+            xOffset = borderSize;
+            yOffset = borderSize + (imgHeight + photoSpacing) * index;
+            break;
+          
+          case '2x2':
+            xOffset = borderSize + (index % 2) * (imgWidth + photoSpacing);
+            yOffset = borderSize + Math.floor(index / 2) * (imgHeight + photoSpacing);
+            break;
+            
+          case '4x1':
+            xOffset = borderSize + (imgWidth + photoSpacing) * index;
+            yOffset = borderSize;
+            break;
+            
+          // Add more cases here in the future
+          
+          default:
+            // Fall back to vertical as default
+            xOffset = borderSize;
+            yOffset = borderSize + (imgHeight + photoSpacing) * index;
+            break;
+        }
 
         const imageRatio = img.width / img.height;
-        const targetRatio = imgWidth / imgHeight;
 
         let sourceWidth = img.width;
         let sourceHeight = img.height;
@@ -320,13 +385,14 @@ const PhotoStrip = () => {
         context.drawImage(
           img,
           sourceX, sourceY, sourceWidth, sourceHeight,
-          borderSize, yOffset, imgWidth, imgHeight
+          xOffset, yOffset, imgWidth, imgHeight // Change borderSize to xOffset
         );
 
         imagesLoaded++;
-        if (imagesLoaded === totalImages) {
+        // --- Draw overlay and text ONLY after ALL images are loaded and drawn ---
+        if (imagesLoaded === totalImagesToLoad) {
           drawFrameOverlay(context, canvas, frameTheme);
-          drawText(context, canvas, totalHeight, borderSize);
+          drawText(context, canvas, totalHeight, borderSize, textHeight);
         }
         // Optional: Could add logic here if needed after *all* images are drawn || for when adding text
         // if (imagesLoaded === totalImages) {
@@ -336,16 +402,46 @@ const PhotoStrip = () => {
 
       img.onerror = (err) => {
         console.error("Error loading image:", imageSrc, err);
-        // Optionally draw a placeholder if an image fails
-        const yOffset = borderSize + (imgHeight + photoSpacing) * index;
+        // Calculate position with switch for the error placeholder too
+        let xOffset, yOffset;
+        
+        switch (photoOrientation) {
+          case '1x4':
+            xOffset = borderSize;
+            yOffset = borderSize + (imgHeight + photoSpacing) * index;
+            break;
+          
+          case '2x2':
+            xOffset = borderSize + (index % 2) * (imgWidth + photoSpacing);
+            yOffset = borderSize + Math.floor(index / 2) * (imgHeight + photoSpacing);
+            break;
+            
+          case '4x1':
+            xOffset = borderSize + (imgWidth + photoSpacing) * index;
+            yOffset = borderSize;
+            break;
+            
+          default:
+            xOffset = borderSize;
+            yOffset = borderSize + (imgHeight + photoSpacing) * index;
+            break;
+        }
+
         context.fillStyle = "lightgray";
-        context.fillRect(borderSize, yOffset, imgWidth, imgHeight);
+        context.fillRect(xOffset, yOffset, imgWidth, imgHeight);
         context.fillStyle = "black";
-        context.fillText("Error", borderSize + 10, yOffset + 20);
+        context.fillText("Error", xOffset + 10, yOffset + 20);
+        
         imagesLoaded++; // Still count it to avoid waiting forever
+        // --- Draw overlay and text ONLY after ALL images are loaded and drawn ---
+        if (imagesLoaded === totalImagesToLoad) {
+          drawFrameOverlay(context, canvas, frameTheme);
+          // Pass calculated totalHeight and borderSize
+          drawText(context, canvas, totalHeight, borderSize, textHeight);
+        }
       };
     });
-  }, [photos, backgroundColor, frameTheme, isLoadingAssets, drawFrameOverlay, drawText]);
+  }, [photos, backgroundColor, frameTheme, photoOrientation, isLoadingAssets, drawFrameOverlay, drawText]);
 
   useEffect(() => {
     if (photos && photos.length === 4 && !isLoadingAssets) {
@@ -398,17 +494,51 @@ const PhotoStrip = () => {
       {photos.length < 4 ?
         <div>
           There are currently no pictures. 
-          Please take some pictures <Link href="/">Here!</Link>
+          Please take some pictures <Link href="/">[Here!]</Link>
         </div>
 
         :
 
         <div className={styles.photoStripMainContainer}>
           {/* Customize Buttons */}
-
           <div className={styles.customizeButtonsContainer}>
+            {/* Orientation */}
+            <div>
+              <h4>Orientation</h4>
 
+              <div className={styles.orientationSelector}>
+                <label>
+                  <input 
+                    type="radio" 
+                    value="1x4" 
+                    checked={photoOrientation === '1x4'} 
+                    onChange={() => setPhotoOrientation('1x4')} 
+                  />
+                  Vertical
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    value="2x2" 
+                    checked={photoOrientation === '2x2'} 
+                    onChange={() => setPhotoOrientation('2x2')} 
+                  />
+                  Grid
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    value="4x1" 
+                    checked={photoOrientation === '4x1'} 
+                    onChange={() => setPhotoOrientation('4x1')} 
+                  />
+                  Horizontal
+                </label>
+                {/* Add more options here as you develop them */}
+              </div>
+            </div>
 
+            {/* Colors */}
             <div>
               <h4>Frame Color:</h4>
 
@@ -427,6 +557,7 @@ const PhotoStrip = () => {
               </div>
             </div>
 
+            {/* Overlay */}
             <div>
               <h4>Overlay & Stickers:</h4>
 
@@ -440,29 +571,32 @@ const PhotoStrip = () => {
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
             </div>
+
+            {/* Control buttons  */}
+            <div className={styles.controlButtonsContainer}>
+              <Link href="/">
+                <button className={styles.startOverButton}>
+                  Take New Photos
+                </button>
+              </Link>
+
+              {photos.length === 4 && (
+                <button onClick={handleDownload} className={styles.downloadButton} disabled={isLoadingAssets}>
+                  Download
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Photostrip Container */}
-          <div className={styles.photoStripContainer}>
-            <canvas ref={canvasRef} className={styles.photoStrip} />
+          <div className={`${styles.photoStripContainer} ${photoOrientation === '4x1' || photoOrientation == '2x2' ? styles.horizontal : styles.vertical}`}>
+            <canvas 
+              ref={canvasRef} 
+              className={styles.photoStrip} 
+            />
           </div>
         </div>
       }
-
-      {/* Control buttons  */}
-      <div className={styles.controlButtonsContainer}>
-        <Link href="/">
-          <button className={styles.startOverButton}>
-            Take New Photos
-          </button>
-        </Link>
-
-        {photos.length === 4 && (
-           <button onClick={handleDownload} className={styles.downloadButton} disabled={isLoadingAssets}>
-             Download
-           </button>
-        )}
-      </div>
     </div>
   );
 };
