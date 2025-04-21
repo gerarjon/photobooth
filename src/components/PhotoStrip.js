@@ -6,11 +6,19 @@ import Link from "next/link";
 import styles from './Photobooth.module.css';
 
 // Images & Overlays
-import pikachuOverlayUrl from '@/assets/frames/pikachuOverlay.png';
-import twiceOverlayUrl from '@/assets/frames/twiceOverlay.png';
-import chickenOverlayUrl from '@/assets/frames/chickenOverlay.png';
-import dogOverlayUrl from '@/assets/frames/dogOverlay.png';
-import susOverlayUrl from '@/assets/frames/susOverlay.png';
+import pikachuOverlay1x4Url from '@/assets/frames/pikachuOverlay_1x4.png';
+import pikachuOverlay2x2Url from '@/assets/frames/pikachuOverlay_2x2.png';
+import pikachuOverlay4x1Url from '@/assets/frames/pikachuOverlay_4x1.png';
+import twiceOverlay1x4Url from '@/assets/frames/twiceOverlay_1x4.png';
+import twiceOverlay2x2Url from '@/assets/frames/twiceOverlay_2x2.png';
+import twiceOverlay4x1Url from '@/assets/frames/twiceOverlay_4x1.png';
+import chickenOverlay1x4Url from '@/assets/frames/chickenOverlay_1x4.png';
+import chickenOverlay2x2Url from '@/assets/frames/chickenOverlay_2x2.png';
+import chickenOverlay4x1Url from '@/assets/frames/chickenOverlay_4x1.png';
+import dogOverlay1x4Url from '@/assets/frames/dogOverlay_1x4.png';
+import dogOverlay2x2Url from '@/assets/frames/dogOverlay_2x2.png';
+import dogOverlay4x1Url from '@/assets/frames/dogOverlay_4x1.png';
+// import susOverlayUrl from '@/assets/frames/susOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
   ctx.fillStyle = color;
@@ -86,8 +94,6 @@ const formatDateNoSlash = (timestamp) => {
   return `${month}${day}${year}`;
 }
 
-
-
 // ----------------------------------------- //
 
 const PhotoStrip = () => {
@@ -101,11 +107,27 @@ const PhotoStrip = () => {
 
   // --- Map theme names/IDs to imported asset URLs ---
   const assetMap = useRef({ 
-    pikachu_frame: pikachuOverlayUrl,
-    twice_frame: twiceOverlayUrl,
-    chicken_frame: chickenOverlayUrl,
-    dog_frame: dogOverlayUrl,
-    sus_frame: susOverlayUrl,
+    pikachu_frame: {
+      "1x4" : pikachuOverlay1x4Url,
+      "2x2" : pikachuOverlay2x2Url,
+      "4x1" : pikachuOverlay4x1Url
+    },
+    twice_frame: {
+      "1x4" : twiceOverlay1x4Url,
+      "2x2" : twiceOverlay2x2Url,
+      "4x1" : twiceOverlay4x1Url,
+    },
+    chicken_frame: {
+      "1x4" : chickenOverlay1x4Url,
+      "2x2" : chickenOverlay2x2Url,
+      "4x1" : chickenOverlay4x1Url,
+    },
+    dog_frame: {
+      "1x4" : dogOverlay1x4Url,
+      "2x2" : dogOverlay2x2Url,
+      "4x1" : dogOverlay4x1Url
+    },
+    // sus_frame: susOverlayUrl,
   }).current;
 
   // --- Effect to preload image assets on mount ---
@@ -113,41 +135,57 @@ const PhotoStrip = () => {
     setIsLoadingAssets(true);
     const images = {};
     let loadedCount = 0;
-    const totalImages = Object.keys(assetMap).length;
-
-    if (totalImages === 0) {
-        setIsLoadingAssets(false);
-        return;
-    }
-
-    Object.entries(assetMap).forEach(([key, src]) => {
-      const img = new Image();
-      img.onload = () => {
-        images[key] = img;
-        loadedCount++;
-        if (loadedCount === totalImages) {
-          setLoadedAssets(images);
-          setIsLoadingAssets(false);
-          console.log("All custom assets loaded.");
-        }
-      };
-      img.onerror = () => {
-        console.error(`Failed to load asset: ${key} from ${src}`);
-        loadedCount++;
-         if (loadedCount === totalImages) {
-          setLoadedAssets(images);
-          setIsLoadingAssets(false);
-        }
-      };
-      img.src = src.src;
+    
+    // Calculate total number of images to load
+    let totalImages = 0;
+    Object.values(assetMap).forEach(orientations => {
+      totalImages += Object.keys(orientations).length;
     });
-
+    
+    if (totalImages === 0) {
+      setIsLoadingAssets(false);
+      return;
+    }
+    
+    // Load each image
+    Object.entries(assetMap).forEach(([frameName, orientations]) => {
+      // Initialize the frame in our loaded assets object
+      images[frameName] = {};
+      
+      // Load each orientation for this frame
+      Object.entries(orientations).forEach(([orientation, src]) => {
+        const img = new Image();
+        
+        img.onload = () => {
+          images[frameName][orientation] = img;
+          loadedCount++;
+          
+          if (loadedCount === totalImages) {
+            setLoadedAssets(images);
+            setIsLoadingAssets(false);
+            console.log("All custom assets loaded.");
+          }
+        };
+        
+        img.onerror = () => {
+          console.error(`Failed to load asset: ${frameName} (${orientation}) from ${src}`);
+          loadedCount++;
+          
+          if (loadedCount === totalImages) {
+            setLoadedAssets(images);
+            setIsLoadingAssets(false);
+          }
+        };
+        
+        img.src = src.src;
+      });
+    });
+    
     // Optional: Cleanup function if needed
     // return () => { /* ... */ }
-
   }, [assetMap]); 
 
-  const drawFrameOverlay = useCallback((context, canvas, theme) => {
+  const drawFrameOverlay = useCallback((context, canvas, theme, photoOrientation) => {
     const width = canvas.width;
     const height = canvas.height;
     context.lineWidth = 1;
@@ -156,85 +194,29 @@ const PhotoStrip = () => {
     const borderSize = 40;
     const photoSpacing = 20;
 
-    switch (theme) {
-      case 'hearts':
-        // Draw hearts in corners or specific spots
-        drawHeart(context, borderSize + 30, borderSize + 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
-        drawHeart(context, width - borderSize - 30, borderSize + 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
-        drawHeart(context, borderSize + 30, height - borderSize - 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
-        drawHeart(context, width - borderSize - 30, height - borderSize - 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
-        // Example: Heart between first two photos
-        const midY1 = borderSize + imgHeight + (photoSpacing / 2);
-        drawHeart(context, width / 2, midY1, 20, 20, 'rgba(255, 105, 180, 0.8)'); // Pink
-        break;
-      case 'stars':
-        // Draw stars
-        drawStar(context, borderSize + 40, borderSize + 40, 5, 15, 7, 'rgba(255, 215, 0, 0.8)'); // Gold
-        drawStar(context, width - borderSize - 40, borderSize + 40, 5, 15, 7, 'rgba(255, 215, 0, 0.8)');
-        drawStar(context, width / 2, height - borderSize - 40, 5, 20, 10, 'rgba(255, 255, 0, 0.8)'); // Yellow
-         // Example: Small stars between photos
-        const midY2 = borderSize + imgHeight + imgHeight + photoSpacing + (photoSpacing / 2);
-        drawStar(context, borderSize + 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)'); // Light blue
-        drawStar(context, width - borderSize - 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)');
-        break;
+    const orientation = photoOrientation || "1x4";
 
-        // --- Add Case for Image-based Frame ---
-        // case 'floral_frame':
-        //   const frameImg = //... get preloaded floral frame Image object ...;
-        //   if (frameImg && frameImg.complete) { // Check if loaded
-        //      context.drawImage(frameImg, 0, 0, width, height);
-        //   }
-        //   break;
-
-      case 'pikachu_frame':
-        const pikachuFrameImg = loadedAssets.pikachu_frame;
-          if (pikachuFrameImg) {
-            context.drawImage(pikachuFrameImg, 0, 0, width, height);
-        } else if (!isLoadingAssets) {
-            console.warn("Pikachu frame asset not loaded");
-        }
-        break;
-
-      case 'twice_frame':
-        const twiceFrameImg = loadedAssets.twice_frame;
-          if (twiceFrameImg) {
-            context.drawImage(twiceFrameImg, 0, 0, width, height);
-        } else if (!isLoadingAssets) {
-            console.warn("Twice frame asset not loaded");
-        }
-        break;
-
-      case 'chicken_frame':
-        const chickenFrameImg = loadedAssets.chicken_frame;
-          if (chickenFrameImg) {
-            context.drawImage(chickenFrameImg, 0, 0, width, height);
-          } else if (!isLoadingAssets) {
-            console.warn("Chicken frame asset not loaded");
-          }
-        break;
-        
-      case 'dog_frame':
-        const dogFrameImg = loadedAssets.dog_frame;
-          if (dogFrameImg) {
-            context.drawImage(dogFrameImg, 0, 0, width, height);
-          } else if (!isLoadingAssets) {
-            console.warn("Dog frame asset not loaded");
-          }
-        break;
-        
-      case 'sus_frame':
-        const susFrameImg = loadedAssets.sus_frame;
-          if (susFrameImg) {
-            context.drawImage(susFrameImg, 0, 0, width, height);
-          } else if (!isLoadingAssets) {
-            console.warn("Sus frame asset not loaded");
-          }
-        break;
-
-      case 'none':
-
-      default:
-        break;
+    if (theme === 'hearts') {
+      drawHeart(context, borderSize + 30, borderSize + 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
+      drawHeart(context, width - borderSize - 30, borderSize + 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
+      drawHeart(context, borderSize + 30, height - borderSize - 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
+      drawHeart(context, width - borderSize - 30, height - borderSize - 30, 25, 25, 'rgba(255, 0, 0, 0.8)');
+      const midY1 = borderSize + imgHeight + (photoSpacing / 2);
+      drawHeart(context, width / 2, midY1, 20, 20, 'rgba(255, 105, 180, 0.8)'); // Pink
+    } else if (theme === 'stars') {
+      drawStar(context, borderSize + 40, borderSize + 40, 5, 15, 7, 'rgba(255, 215, 0, 0.8)'); // Gold
+      drawStar(context, width - borderSize - 40, borderSize + 40, 5, 15, 7, 'rgba(255, 215, 0, 0.8)');
+      drawStar(context, width / 2, height - borderSize - 40, 5, 20, 10, 'rgba(255, 255, 0, 0.8)'); // Yellow
+      const midY2 = borderSize + imgHeight + imgHeight + photoSpacing + (photoSpacing / 2);
+      drawStar(context, borderSize + 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)'); // Light blue
+      drawStar(context, width - borderSize - 30, midY2, 5, 8, 4, 'rgba(173, 216, 230, 0.9)');
+    } else if (theme.endsWith('_frame') && theme !== 'none') {
+      // Draw the image-based frame
+      if (loadedAssets[theme] && loadedAssets[theme][orientation]) {
+        context.drawImage(loadedAssets[theme][orientation], 0, 0, width, height);
+      } else if (!isLoadingAssets) {
+        console.warn(`${theme} asset not loaded for orientation: ${orientation}`);
+      }
     }
   }, [loadedAssets, isLoadingAssets]);
 
@@ -290,8 +272,8 @@ const PhotoStrip = () => {
         
       case '4x1': // Example of a future layout
         // Horizontal strip layout (4 photos in a row)
-        imgHeight = 200; // Define a fixed height for images in the strip
-        targetRatio = 4 / 3; // Desired aspect ratio
+        imgHeight = 200;
+        targetRatio = 4 / 3;
         imgWidth = Math.round(imgHeight * targetRatio); // Calculate width (~267)
         canvasWidth = (imgWidth * 4) + (photoSpacing * 3) + (borderSize * 2);
         canvasHeight = imgHeight + (borderSize * 2) + textHeight;
@@ -306,21 +288,19 @@ const PhotoStrip = () => {
         break;
     }
     
-    // Store the total height for drawText function
     const totalHeight = canvasHeight;
-    
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#F53843');
-    gradient.addColorStop(1/6, '#F7BB3F');
-    gradient.addColorStop(2/6, '#FDEA58');
-    gradient.addColorStop(3/6, '#4BEE4D');
-    gradient.addColorStop(4/6, '#7CD3FF');
-    gradient.addColorStop(5/6, '#D75CFE');
-    gradient.addColorStop(1, '#FED8FF');
+    gradient.addColorStop(0, '#F53843'); //red
+    gradient.addColorStop(1/6, '#F7BB3F'); //orange
+    gradient.addColorStop(2/6, '#FDEA58'); //yello
+    gradient.addColorStop(3/6, '#4BEE4D'); //green
+    gradient.addColorStop(4/6, '#7CD3FF'); //blue
+    gradient.addColorStop(5/6, '#D75CFE'); //purple
+    gradient.addColorStop(1, '#FED8FF'); //pink
 
     if (backgroundColor === "gradient") setBackgroundColor(gradient);
 
@@ -391,7 +371,7 @@ const PhotoStrip = () => {
         imagesLoaded++;
         // --- Draw overlay and text ONLY after ALL images are loaded and drawn ---
         if (imagesLoaded === totalImagesToLoad) {
-          drawFrameOverlay(context, canvas, frameTheme);
+          drawFrameOverlay(context, canvas, frameTheme, photoOrientation);
           drawText(context, canvas, totalHeight, borderSize, textHeight);
         }
         // Optional: Could add logic here if needed after *all* images are drawn || for when adding text
@@ -436,7 +416,6 @@ const PhotoStrip = () => {
         // --- Draw overlay and text ONLY after ALL images are loaded and drawn ---
         if (imagesLoaded === totalImagesToLoad) {
           drawFrameOverlay(context, canvas, frameTheme);
-          // Pass calculated totalHeight and borderSize
           drawText(context, canvas, totalHeight, borderSize, textHeight);
         }
       };
@@ -473,7 +452,7 @@ const PhotoStrip = () => {
       const image = canvas.toDataURL("image/png");
       const link = document.createElement('a');
       link.href = image;
-      link.download = `photostrip_${formatDateNoSlash(Date.now())}.png`;
+      link.download = `PicturanCo_${formatDateNoSlash(Date.now())}_${photoOrientation}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -534,7 +513,6 @@ const PhotoStrip = () => {
                   />
                   Horizontal
                 </label>
-                {/* Add more options here as you develop them */}
               </div>
             </div>
 
@@ -567,7 +545,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setFrameTheme('twice_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>TWICE</button>
                 <button onClick={() => setFrameTheme('chicken_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.chicken_frame}>Chicken</button>
                 <button onClick={() => setFrameTheme('dog_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.dog_frame}>Dog</button>
-                <button onClick={() => setFrameTheme('sus_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.sus_frame}>Sus</button>
+                {/* <button onClick={() => setFrameTheme('sus_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.sus_frame}>Sus</button> */}
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
             </div>
