@@ -552,7 +552,7 @@ const PhotoStrip = () => {
 
             {/* Control buttons  */}
             <div className={styles.controlButtonsContainer}>
-              <Link href="/">
+              <Link href="/photobooth">
                 <button className={styles.startOverButton}>
                   Take New Photos
                 </button>
