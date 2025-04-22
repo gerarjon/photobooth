@@ -138,6 +138,70 @@ h1, h2, h3, h4 {
   border: none;
 }
 
+/* Hero */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.hero-text-container {
+  width: 100%;
+  max-width: 50dvw;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.hero-title {
+  font-size: 5em;
+  color: #FD8798;
+  line-height: 0.9;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-title h1:nth-child(1) {
+  transform: rotate(-3deg);
+}
+
+.hero-title h1:nth-child(2) {
+  transform: rotate(2deg);
+}
+
+.hero-title h1:nth-child(3) {
+  transform: rotate(-1deg);
+}
+
+.hero-title h1 {
+  margin: 0;
+}
+
+.hero-description {
+  font-size: 1.1em;
+  margin: 1em 0;
+  max-width: 475px;
+  line-height: 1.6;
+}
+
+.hero-cta {
+  margin: 0 auto;
+  padding: 16px 32px;
+  font-weight: 500;
+  font-size: 1em;
+  color: white;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  background-color: #fd8798;
+}
+
+.hero-cta:hover {
+  background-color: #ff516b;
+}
+
 /* Footer  */
 
 .footer {
@@ -251,6 +315,10 @@ button:hover {
 
 /* Media Queries for responsive design */
 @media only screen and (max-width: 480px) {
+  .main {
+    min-height: none;
+  }
+
   .navbar {
     display: flex;
     align-items: center;
@@ -260,6 +328,20 @@ button:hover {
   .logo-container {
     object-fit: contain;
     width: 70%;
+  }
+
+  .hero {
+    width: 100%;
+  }
+
+  .hero-text-container {
+    width: 100%;
+    max-width: none;
+  }
+
+  .hero-description {
+    width: 80%;
+    margin: 1em auto;
   }
 
   .footer {

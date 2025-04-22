@@ -23,6 +23,7 @@ const montserrat = Montserrat({
 export const metadata = {
   title: "PicturanCo | Free Online Photobooth",
   description: "Your personal online photo booth! You can use this on your desktop, tablet, and phone. Create fun and cute photo strips with frames and stickers - totally free!",
+  keywords: ["photo booth", "online photo strip", "create photo booth", "digital photobooth", "fun photo strips", "kawaii stickers", "photobooth creator", "Japanese photo booth", "Purikura", "Korean photo booth", "Life4Cuts", "selfie strip"]
 };
 
 export default function RootLayout({ children }) {
