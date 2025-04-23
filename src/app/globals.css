@@ -155,9 +155,9 @@ h1, h2, h3, h4 {
 }
 
 .hero-title {
-  font-size: 5em;
+  font-size: 5.5em;
   color: #FD8798;
-  line-height: 0.9;
+  line-height: 0.85;
   text-transform: uppercase;
   display: flex;
   flex-direction: column;
@@ -180,17 +180,27 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
+.hero-subhead {
+  margin-top: 1.3em;
+  margin-bottom: 0.5em;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: 500;
+  color: rgb(76, 76, 76);
+}
+
 .hero-description {
   font-size: 1.1em;
-  margin: 1em 0;
+  margin-bottom: 1.3em;
   max-width: 475px;
   line-height: 1.6;
+  font-weight: 500;
 }
 
 .hero-cta {
   margin: 0 auto;
-  padding: 16px 32px;
-  font-weight: 500;
+  padding: 16px 40px;
+  font-weight: 700;
   font-size: 1em;
   color: white;
   border: none;
@@ -200,6 +210,63 @@ h1, h2, h3, h4 {
 
 .hero-cta:hover {
   background-color: #ff516b;
+}
+
+.hero-card-container {
+  position:absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+  margin: 0 auto;
+  padding-bottom: 6em;
+  z-index: -1;
+  margin-right: 5em;
+}
+
+.hero-card {
+  position: relative;
+  max-width: 200px;
+}
+
+.hero-card-image-1, .hero-card-image-2 {
+  position:relative;
+  border-radius: 5px;
+  box-shadow: 0px 3px 10px rgba(80, 79, 79, 0.606);
+}
+
+.hero-card-image-1 {
+  height: 300px;
+  width: 100%;
+  transform: rotate(10deg);
+  transform: translate3d(0, 0, 0) skewY(0deg);
+  animation: hover-skew-1 4s ease-in-out infinite alternate;
+}
+
+.hero-card-image-2 {
+  height: 200px;
+  width: 100%;
+  transform: rotate(-10deg);
+  transform: translate3d(0, 0, 0) skewX(0deg);
+  animation: hover-skew-2 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes hover-skew-1 {
+  0% {
+    transform: translate3d(0, 0, 0) skewY(0deg);
+  }
+  100% {
+    transform: translate3d(0, -10px, 0) skewY(-3deg); /* End: move up 20px, skew 5 degrees on Y axis */
+  }
+}
+
+@keyframes hover-skew-2 {
+  0% {
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  100% {
+    transform: translate3d(0, -10px, 0) skewX(3deg); /* End: move up 15px, skew -8 degrees on X axis */
+  }
 }
 
 /* Footer  */
@@ -314,7 +381,49 @@ button:hover {
 }
 
 /* Media Queries for responsive design */
-@media only screen and (max-width: 480px) {
+
+@media (max-width: 1366px) {
+  .hero-card-container {
+    width: 50%;
+    margin-right: 4em;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    text-align: center;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero{
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 4em;
+  }
+
+  .hero-description{
+    font-size: 1em;
+  }
+
+  .hero-card-container {
+    width: 70%;
+    margin-right:4em;
+  }
+
+  /* .footer-logo{
+    bottom: -1em;
+    height: 5em;
+  } */
+}
+
+@media (max-width: 480px) {
   .main {
     min-height: none;
   }
@@ -334,6 +443,10 @@ button:hover {
     width: 100%;
   }
 
+  .hero-title {
+    font-size: 3.5em;
+  }
+
   .hero-text-container {
     width: 100%;
     max-width: none;
@@ -342,6 +455,22 @@ button:hover {
   .hero-description {
     width: 80%;
     margin: 1em auto;
+    font-size: 0.9em;
+  }
+
+  .hero-card-container {
+    width: 90%;
+    margin-right: 1em;
+  }
+
+  .hero-card-image-1 {
+    height: 150px;
+    width: 100%;
+  }
+  
+  .hero-card-image-2 {
+    height: 100px;
+    width: 100%;
   }
 
   .footer {
@@ -357,19 +486,4 @@ button:hover {
   }
 }
 
-@media only screen and (max-width: 768px) {
-  h1 {
-    text-align: center;
-  }
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* .footer-logo{
-    bottom: -1em;
-    height: 5em;
-  } */
-}
