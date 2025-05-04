@@ -18,6 +18,9 @@ import chickenOverlay4x1Url from '@/assets/frames/chickenOverlay_4x1.png';
 import dogOverlay1x4Url from '@/assets/frames/dogOverlay_1x4.png';
 import dogOverlay2x2Url from '@/assets/frames/dogOverlay_2x2.png';
 import dogOverlay4x1Url from '@/assets/frames/dogOverlay_4x1.png';
+import sbdOverlay1x4Url from '@/assets/frames/sbdOverlay_1x4.png';
+import sbdOverlay2x2Url from '@/assets/frames/sbdOverlay_2x2.png';
+import sbdOverlay4x1Url from '@/assets/frames/sbdOverlay_4x1.png';
 // import susOverlayUrl from '@/assets/frames/susOverlay.png';
 
 const drawStar = (ctx, x, y, arms, outerRadius, innerRadius, color = 'gold') => {
@@ -127,6 +130,11 @@ const PhotoStrip = () => {
       "2x2" : dogOverlay2x2Url,
       "4x1" : dogOverlay4x1Url
     },
+    sbd_frame: {
+      "1x4" : sbdOverlay1x4Url,
+      "2x2" : sbdOverlay2x2Url,
+      "4x1" : sbdOverlay4x1Url
+    },
     // sus_frame: susOverlayUrl,
   }).current;
 
@@ -136,7 +144,6 @@ const PhotoStrip = () => {
     const images = {};
     let loadedCount = 0;
     
-    // Calculate total number of images to load
     let totalImages = 0;
     Object.values(assetMap).forEach(orientations => {
       totalImages += Object.keys(orientations).length;
@@ -149,7 +156,6 @@ const PhotoStrip = () => {
     
     // Load each image
     Object.entries(assetMap).forEach(([frameName, orientations]) => {
-      // Initialize the frame in our loaded assets object
       images[frameName] = {};
       
       // Load each orientation for this frame
@@ -545,6 +551,7 @@ const PhotoStrip = () => {
                 <button onClick={() => setFrameTheme('twice_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.twice_frame}>TWICE</button>
                 <button onClick={() => setFrameTheme('chicken_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.chicken_frame}>Chicken</button>
                 <button onClick={() => setFrameTheme('dog_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.dog_frame}>Dog</button>
+                <button onClick={() => setFrameTheme('sbd_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.sbd_frame}>SBD</button>
                 {/* <button onClick={() => setFrameTheme('sus_frame')} className={styles.frameButton} disabled={isLoadingAssets || !loadedAssets.sus_frame}>Sus</button> */}
                 <button onClick={() => setFrameTheme('stars')} className={styles.frameButton}>Stars</button>
               </div>
